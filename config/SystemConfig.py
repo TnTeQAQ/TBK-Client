@@ -4,7 +4,6 @@ ENVIRONMENT = 'development'
 
 
 CURRENT_LANGUAGE = "zh"
-TBK_NODE_NAME = "TBK-Client"
 FONT_FILE = "static/font/BLACK-NORMAL.ttf"
 # FONT_FILE = "static/font/SmileySans-Oblique.ttf"
 # FONT_FILE = "static/font/Minecraft.ttf"

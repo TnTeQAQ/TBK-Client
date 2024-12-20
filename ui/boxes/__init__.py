@@ -18,18 +18,6 @@ modules_to_import = [
     ("ui.boxes.BaseBox", "BaseBox"),
     ("ui.boxes.ConsoleBox", "ConsoleBox"),
     ("ui.boxes.InputConsoleBox", "InputConsoleBox"),
-    ("ui.boxes.MessageBox", "MessageBox"),
-    ("ui.boxes.ParamBox", "ParamBox"),
-    ("ui.boxes.PlotVzBox", "PlotVzBox"),
-    ("ui.boxes.LogReaderBox", "LogReaderBox"),
-    ("ui.boxes.NodeBox", "NodeBox"),
-    ("ui.boxes.IMUBox", "IMUBox"),
-    ("ui.boxes.PointsCouldBox", "PointsCouldBox"),
-    ("ui.boxes.AGVControlBox", "AGVControlBox"),
-    ("ui.boxes.RRTBox", "RRTBox"),
-    ("ui.boxes.FastLioMappingBox", "FastLioMappingBox"),
-    ("ui.boxes.PointsFaceBox", "PointsFaceBox"),
-    ("ui.boxes.LiveBox", "LiveBox"),
 ]
 
 # 尝试导入每个模块，并将其绑定到全局命名空间
