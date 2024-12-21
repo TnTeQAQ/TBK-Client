@@ -1,93 +1,69 @@
 import dearpygui.dearpygui as dpg
+import json
 
-from config.SystemConfig import FONT_FILE
-from static.Params import LanguageParams
+from utils.ClientLogManager import client_logger
 
 
 class LayoutManager:
-    def __init__(self, theme="Dark", font_size=20, init_file="static/layout/ui_layout.ini",
-                 settings_file="layout_settings.json"):
-        # 初始化布局管理器，设置保存布局的文件名
-        self.settings_file = settings_file
-        self.init_file = init_file
-        self.theme = theme
-        self.language = LanguageParams()
-        self.font_size = font_size
-        self.set_theme(self.theme)
-        self.set_font(self.font_size)
+    def __init__(self, config_file):
+        self.config_path = "static/themes/"
+        # 从配置文件中加载配置
+        self.config = self.load_config(self.config_path+config_file+'.json')
+        self.color_config = self.config.get("colors", {})
+        self.style_config = self.config.get("styles", {})
+        self.font_config = self.config.get("font", {})
 
-    # 主题
-    def set_theme(self, theme):
+        # 设置主题和字体
+        self.set_theme()
+        self.set_font()
+
+    def load_config(self, config_file):
+        try:
+            with open(config_file, "r", encoding="utf-8") as file:
+                return json.load(file)
+        except FileNotFoundError as e:
+            client_logger.log("WARNING", f"Configuration file {config_file} not found", e)
+            print(f"配置文件 {config_file} 未找到")
+            return {}
+        except json.JSONDecodeError as e:
+            client_logger.log("WARNING", f"The configuration file {config_file} is in the wrong format", e)
+            return {}
+
+    def set_theme(self):
         with dpg.theme() as global_theme:
             with dpg.theme_component(dpg.mvAll):
-                if theme == "Dark":
-                    dpg.add_theme_color(dpg.mvThemeCol_WindowBg, (36, 36, 36, 255))
-                    dpg.add_theme_color(dpg.mvThemeCol_TitleBg, (60, 60, 60, 255))
-                    dpg.add_theme_color(dpg.mvThemeCol_TitleBgActive, (80, 80, 80, 255))
-                    dpg.add_theme_color(dpg.mvThemeCol_Button, (80, 80, 80, 255))
-                    dpg.add_theme_color(dpg.mvThemeCol_ButtonHovered, (100, 100, 100, 255))
-                    dpg.add_theme_color(dpg.mvThemeCol_ButtonActive, (120, 120, 120, 255))
-                    dpg.add_theme_color(dpg.mvThemeCol_Text, (255, 255, 255, 255))
-                    dpg.add_theme_color(dpg.mvThemeCol_FrameBg, (50, 50, 50, 255))
-                    dpg.add_theme_color(dpg.mvThemeCol_FrameBgHovered, (70, 70, 70, 255))
-                    dpg.add_theme_color(dpg.mvThemeCol_FrameBgActive, (90, 90, 90, 255))
-                    dpg.add_theme_style(dpg.mvStyleVar_WindowRounding, 10)
-                    dpg.add_theme_style(dpg.mvStyleVar_FrameRounding, 5)
-                    dpg.add_theme_color(dpg.mvThemeCol_Header, (70, 70, 70, 255))
-                    dpg.add_theme_color(dpg.mvThemeCol_HeaderHovered, (90, 90, 90, 255))
-                    dpg.add_theme_color(dpg.mvThemeCol_HeaderActive, (110, 110, 110, 255))
-                    dpg.add_theme_style(dpg.mvStyleVar_FramePadding, 5, 5)
-
-                if theme == "Light":
-                    dpg.add_theme_color(dpg.mvThemeCol_WindowBg, (240, 240, 240, 255))
-                    dpg.add_theme_color(dpg.mvThemeCol_TitleBg, (220, 220, 220, 255))
-                    dpg.add_theme_color(dpg.mvThemeCol_TitleBgActive, (200, 200, 200, 255))
-                    dpg.add_theme_color(dpg.mvThemeCol_Button, (200, 200, 200, 255))
-                    dpg.add_theme_color(dpg.mvThemeCol_ButtonHovered, (180, 180, 180, 255))
-                    dpg.add_theme_color(dpg.mvThemeCol_ButtonActive, (160, 160, 160, 255))
-                    dpg.add_theme_color(dpg.mvThemeCol_Text, (0, 0, 0, 255))
-                    dpg.add_theme_color(dpg.mvThemeCol_FrameBg, (230, 230, 230, 255))
-                    dpg.add_theme_color(dpg.mvThemeCol_FrameBgHovered, (210, 210, 210, 255))
-                    dpg.add_theme_color(dpg.mvThemeCol_FrameBgActive, (190, 190, 190, 255))
-                    dpg.add_theme_style(dpg.mvStyleVar_WindowRounding, 10)
-                    dpg.add_theme_style(dpg.mvStyleVar_FrameRounding, 5)
-                    dpg.add_theme_color(dpg.mvThemeCol_Header, (70, 70, 70, 255))
-                    dpg.add_theme_color(dpg.mvThemeCol_HeaderHovered, (90, 90, 90, 255))
-                    dpg.add_theme_color(dpg.mvThemeCol_HeaderActive, (110, 110, 110, 255))
-                    dpg.add_theme_style(dpg.mvStyleVar_FramePadding, 5, 5)
+                # 设置颜色
+                for color_name, color_value in self.color_config.items():
+                    color_enum = getattr(dpg, color_name, None)
+                    if color_enum:
+                        dpg.add_theme_color(color_enum, color_value)
+                # 设置样式
+                for style_name, style_value in self.style_config.items():
+                    style_enum = getattr(dpg, style_name, None)
+                    if style_enum:
+                        if isinstance(style_value, list) and len(style_value) == 2:
+                            dpg.add_theme_style(style_enum, style_value[0], style_value[1])
+                        else:
+                            dpg.add_theme_style(style_enum, style_value)
         dpg.bind_theme(global_theme)
 
-    def set_font(self, size=25):
+    def set_font(self):
+        font_file = self.font_config.get("file", None)
+        font_size = self.font_config.get("size", 15)
+
+        if font_file is None:
+            print("字体文件未在配置中指定")
+            return
+
         # 创建字体注册器
         with dpg.font_registry():
-            # 加载字体，并设置字体大小为15
-            with dpg.font(
-                    FONT_FILE, size, pixel_snapH=True
-            ) as chinese_font:
-                # 添加字体范围提示，指定字体应包含完整的中文字符集
-                dpg.add_font_range_hint(dpg.mvFontRangeHint_Chinese_Full)
-                # 以下是其他语言的字符集
-                #    Options:
-                #        mvFontRangeHint_Japanese
-                #        mvFontRangeHint_Korean
-                #        mvFontRangeHint_Chinese_Full
-                #        mvFontRangeHint_Chinese_Simplified_Common
-                #        mvFontRangeHint_Cyrillic
-                #        mvFontRangeHint_Thai
-                #        mvFontRangeHint_Vietnamese
-        dpg.bind_font(chinese_font)
+            with dpg.font(font_file, font_size, pixel_snapH=True) as custom_font:
+                # 添加字体范围提示
+                font_hint = self.font_config.get("range_hint", "mvFontRangeHint_Chinese_Full")
+                font_hint_enum = getattr(dpg, font_hint, None)
+                if font_hint_enum:
+                    dpg.add_font_range_hint(font_hint_enum)
 
-    # 语言
-    def choose_lanuage(self, country):
-        current_language = country
-        label = self.language[current_language]
-        dpg.set_item_label("main_window", label["main_window"])
-        dpg.set_item_label("view_menu", label["view_menu"])
-        dpg.set_item_label("theme_menu", label["theme_menu"])
-        dpg.set_item_label("dark_theme", label["dark_theme"])
-        dpg.set_item_label("light_theme", label["light_theme"])
-        dpg.set_item_label("language_label", label["language_label"])
-        dpg.set_item_label("chineseS_menu", label["chineseS_menu"])
-        dpg.set_item_label("english_menu", label["english_menu"])
-        dpg.set_item_label("english_menu", label["english_menu"])
+        dpg.bind_font(custom_font)
+
 

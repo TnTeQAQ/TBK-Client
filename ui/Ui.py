@@ -1,26 +1,23 @@
 import json
 import dearpygui.dearpygui as dpg
 
-from config.SystemConfig import PROHIBITED_BOXES
-from config.UiConfig import UI_TITTLE
 from ui.LayoutManager import LayoutManager
-from utils.ClientLogManager import client_logger
-from utils.DataProcessor import get_ui_data
 from utils.Utils import get_all_subclasses
+# from utils.DataProcessor import get_ui_data
 from ui.boxes import *
+from config.SystemConfig import PROHIBITED_BOXES, UI_TITTLE, UI_WIDTH, UI_HEIGHT, UI_THEME
 
 
 class UI:
     def __init__(self):
-        self.layout_manager = LayoutManager()
-        self.ui_data = None
-        # self.config.instance = self
+        dpg.create_context()
+        self.layout_manager = LayoutManager(UI_THEME)
+        # self.ui_data = None
         self.boxes = []
         self.box_count = {}
         self.is_created = False
         self.console_box = None
         self.input_box = None
-        # self._ui_callback = UICallback()
         self.all_classes = get_all_subclasses(BaseBox)
         self.generate_add_methods()
         self.boxes_init_file = "static/layout/boxes_init.json"
@@ -28,7 +25,7 @@ class UI:
     def create(self):
         # 创建主窗口
         self.add_global_handler()
-        dpg.create_viewport(title=UI_TITTLE, width=1920, height=1080)
+        dpg.create_viewport(title=UI_TITTLE, width=UI_WIDTH, height=UI_HEIGHT)
         dpg.configure_app(
             docking=True,
             docking_space=True,
@@ -36,7 +33,7 @@ class UI:
         dpg.setup_dearpygui()
         dpg.show_viewport()
         self.create_viewport_menu()
-        self.ui_data = get_ui_data()
+        # self.ui_data = get_ui_data()
         self.console_box = self.add_ConsoleBox(ui=self)
         self.input_box = self.add_InputConsoleBox(ui=self)
         self.load_boxes()
@@ -117,6 +114,7 @@ class UI:
     def generate_add_methods(self):
         for cls in self.all_classes:
             method_name = f"add_{cls.__name__}"
+
             # 使用闭包捕获cls
             def add_method(self, cls=cls, **kwargs):
                 try:
@@ -128,6 +126,7 @@ class UI:
                     return instance
                 except Exception as e:
                     client_logger.log("WARNING", f"Unable to instantiate {cls}", e=e)
+
             # 将生成的方法绑定到当前实例
             setattr(self, method_name, add_method.__get__(self))
 
@@ -157,8 +156,9 @@ class UI:
             dpg.toggle_viewport_fullscreen()
 
     def on_mouse_move(self, sender, app_data):
-        self.ui_data.draw_mouse_pos_last = self.ui_data.draw_mouse_pos
-        self.ui_data.draw_mouse_pos = dpg.get_drawing_mouse_pos()
-        self.ui_data.mouse_move_pos = tuple(
-            x - y for x, y in zip(self.ui_data.draw_mouse_pos, self.ui_data.draw_mouse_pos_last)
-        )
+        pass
+        # self.ui_data.draw_mouse_pos_last = self.ui_data.draw_mouse_pos
+        # self.ui_data.draw_mouse_pos = dpg.get_drawing_mouse_pos()
+        # self.ui_data.mouse_move_pos = tuple(
+        #     x - y for x, y in zip(self.ui_data.draw_mouse_pos, self.ui_data.draw_mouse_pos_last)
+        # )

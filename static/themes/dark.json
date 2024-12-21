@@ -1,0 +1,27 @@
+{
+  "colors": {
+    "mvThemeCol_WindowBg": [36, 36, 36, 255],
+    "mvThemeCol_TitleBg": [60, 60, 60, 255],
+    "mvThemeCol_TitleBgActive": [80, 80, 80, 255],
+    "mvThemeCol_Button": [80, 80, 80, 255],
+    "mvThemeCol_ButtonHovered": [100, 100, 100, 255],
+    "mvThemeCol_ButtonActive": [120, 120, 120, 255],
+    "mvThemeCol_Text": [255, 255, 255, 255],
+    "mvThemeCol_FrameBg": [50, 50, 50, 255],
+    "mvThemeCol_FrameBgHovered": [70, 70, 70, 255],
+    "mvThemeCol_FrameBgActive": [90, 90, 90, 255],
+    "mvThemeCol_Header": [70, 70, 70, 255],
+    "mvThemeCol_HeaderHovered": [90, 90, 90, 255],
+    "mvThemeCol_HeaderActive": [110, 110, 110, 255]
+  },
+  "styles": {
+    "mvStyleVar_WindowRounding": 10,
+    "mvStyleVar_FrameRounding": 5,
+    "mvStyleVar_FramePadding": [5, 5]
+  },
+  "font": {
+    "file": "static/font/BLACK-NORMAL.ttf",
+    "size": 20,
+    "range_hint": "mvFontRangeHint_Chinese_Full"
+  }
+}

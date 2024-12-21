@@ -1,7 +1,7 @@
 import dearpygui.dearpygui as dpg
 
 from config.SystemConfig import PROHIBITED_BOXES
-from ui.boxes import *
+from ui.boxes import BaseBox
 
 class ConsoleBox(BaseBox):
     only = True
@@ -11,7 +11,7 @@ class ConsoleBox(BaseBox):
         self.fps_text = None
         self.button_tags = []
         self.all_classes = self.ui.all_classes
-        self.is_sticky = False
+        self.is_sticky = True
         self.sticky_button = None
         # self.generate_add_methods()
 
@@ -82,30 +82,6 @@ class ConsoleBox(BaseBox):
             dpg.configure_item(self.tag, popup=False)
         else:
             dpg.configure_item(self.tag, popup=True)
-
-    # # 生成添加类方法
-    # def generate_add_methods(self):
-    #     for cls in self.all_classes:
-    #         if cls == self.__class__:
-    #             continue
-    #         method_name = f"add_{cls.__name__}"
-    #
-    #         # 使用闭包捕获cls
-    #         def add_method(self, cls=cls, **kwargs):
-    #             try:
-    #                 if cls.only and self.ui.box_count.get(cls, 0) >= 1:
-    #                     # 如果盒子已经创建则不重复创建
-    #                     raise Exception("This box can only be created once")
-    #                 instance = cls(**kwargs)
-    #                 instance.create()
-    #                 # self.boxes.append(instance)
-    #                 # self.box_count[cls] = self.box_count.setdefault(cls, 0) + 1
-    #                 # client_logger.log("INFO", f"{instance} instance has been added to the boxes list.")
-    #             except Exception as e:
-    #                 client_logger.log("ERROR", f"Unable to instantiate {cls}", e=e)
-    #
-    #         # 将生成的方法绑定到当前实例
-    #         setattr(self, method_name, add_method.__get__(self))
 
     def update(self):
         dpg.set_value(self.fps_text, f"FPS:{dpg.get_frame_rate()}")

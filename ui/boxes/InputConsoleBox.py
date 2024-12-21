@@ -1,8 +1,6 @@
 import dearpygui.dearpygui as dpg
-import tzcp.ros.sensor_pb2
 from config.SystemConfig import PROHIBITED_BOXES
-from ui.boxes import *
-
+from ui.boxes import BaseBox
 
 class InputConsoleBox(BaseBox):
     only = True
@@ -23,7 +21,6 @@ class InputConsoleBox(BaseBox):
         # 初始化设置
         dpg.configure_item(
             self.tag,
-            label="InputConsoleBox",
             width=self.width,
             height=self.height,
             # autosize=True,

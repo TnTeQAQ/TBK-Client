@@ -14,9 +14,9 @@ def loop(UI):
 
 
 def main():
-    dpg.create_context()
     ui = UI()
     ui.show()
+    # dpg.show_style_editor()
     # demo.show_demo()
     ui.run_loop(lambda: loop(ui))
 
