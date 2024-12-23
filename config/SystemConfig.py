@@ -19,3 +19,4 @@ BOX_POS_OFFSET = 20
 
 # LOG设置
 UI_LOG_DIR = "logs/ui_logs"
+DATA_LOG_DIR = "logs/data_logs"

@@ -69,6 +69,7 @@ class BaseBox(object):
         pass
     def key_press_handler(self, sender, app_data, user_data):
         pass
+
     def destroy(self):
         # 销毁盒子
         global box_pos, pos_offset

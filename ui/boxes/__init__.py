@@ -1,16 +1,22 @@
 from utils.ClientLogManager import client_logger
 
+def try_import(module_path, class_name=None):
+    """
+    动态尝试导入模块和类，支持单个模块或模块中的特定类。
 
-def try_import(module_path, class_name):
+    :param module_path: 模块路径
+    :param class_name: 要导入的类名，如果为 None，则导入整个模块
+    :return: 导入的模块或类；如果导入失败则返回 None
+    """
     try:
-        client_logger.log("TRACE", f"Trying to import {class_name} from {module_path}")
-        module = __import__(module_path, fromlist=[class_name])
-        return getattr(module, class_name)
+        if class_name:
+            client_logger.log("TRACE", f"Trying to import {class_name} from {module_path}")
+            module = __import__(module_path, fromlist=[class_name])
+            return getattr(module, class_name)
+        else:
+            return __import__(module_path)
     except ImportError as e:
         client_logger.log("ERROR", f"Failed to import {class_name} from {module_path}", e)
-        return None
-    except Exception as e:
-        client_logger.log("ERROR", f"Unexpected error while importing {class_name} from {module_path}", e)
         return None
 
 
@@ -20,10 +26,15 @@ modules_to_import = [
     ("ui.boxes.ConsoleBox", "ConsoleBox"),
     ("ui.boxes.InputConsoleBox", "InputConsoleBox"),
     ("ui.boxes.DemoBox", "DemoBox"),
+    ("ui.boxes.LiveEditor", None),
 ]
 
-# 尝试导入每个模块，并将其绑定到全局命名空间
+# 动态导入模块，绑定到全局作用域
 for module_path, class_name in modules_to_import:
-    imported_class = try_import(module_path, class_name)
-    if imported_class:
-        globals()[class_name] = imported_class  # 动态添加到全局作用域
+    imported = try_import(module_path, class_name)
+    if imported:
+        if class_name:
+            globals()[class_name] = imported  # 将类名绑定到全局作用域
+        else:
+            module_name = module_path.split('.')[-1]
+            globals()[module_name] = imported  # 将模块名绑定到全局作用域

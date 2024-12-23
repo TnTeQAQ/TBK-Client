@@ -62,8 +62,8 @@ class UI:
                         continue
                     self.new_box(
                         box_config["cls_name"],
-                        width=box_config["width"],
-                        height=box_config["height"],
+                        width=box_config["plane_width"],
+                        height=box_config["plane_height"],
                         pos=box_config["pos"]
                     )
         except Exception as e:
@@ -114,7 +114,6 @@ class UI:
     def generate_add_methods(self):
         for cls in self.all_classes:
             method_name = f"add_{cls.__name__}"
-
             # 使用闭包捕获cls
             def add_method(self, cls=cls, **kwargs):
                 try:
@@ -126,7 +125,6 @@ class UI:
                     return instance
                 except Exception as e:
                     client_logger.log("WARNING", f"Unable to instantiate {cls}", e=e)
-
             # 将生成的方法绑定到当前实例
             setattr(self, method_name, add_method.__get__(self))
 
@@ -139,8 +137,8 @@ class UI:
                 boxes_config.append(
                     {
                         "cls_name": box.__class__.__name__,
-                        "width": dpg.get_item_width(box.tag),
-                        "height": dpg.get_item_height(box.tag),
+                        "plane_width": dpg.get_item_width(box.tag),
+                        "plane_height": dpg.get_item_height(box.tag),
                         "pos": dpg.get_item_pos(box.tag),
                     }
                 )

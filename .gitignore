@@ -7,3 +7,5 @@ logs/*
 static/layout/*
 *.lprof
 
+/zss.ini
+/zss_simulator.ini
