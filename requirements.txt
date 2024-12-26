@@ -1,2 +1,10 @@
 dearpygui==2.0.0
 loguru==0.7.2
+pygfx==0.6.0
+pylinalg==0.4.1
+numpy==1.23.5
+protobuf==5.29.2
+pympler==1.1
+imageio==2.26.0
+opencv-python==4.9.0.80
+wgpu==0.19.3

@@ -52,7 +52,7 @@ class LiveBox(BaseBox):
         # 更新球的位置
         if self.ball is None:
             self.ball = Ball(scene=self.canvas3D)
-        self.ball.add_position((ball.x, ball.y, self.field.get_z()), 1)
+        self.ball.set_position((ball.x, ball.y, self.field.get_z()))
 
         self.update_robots(robots_blue, self.robots["blue"], BLUE)
         self.update_robots(robots_yellow, self.robots["yellow"], YELLOW)
@@ -70,8 +70,8 @@ class LiveBox(BaseBox):
                     team=team_constant,
                 )
                 previous_robots[rb.robot_id] = robot
-            robot.add_position((rb.x, rb.y, self.field.get_z() + robot.height/2), 1)
-            robot.set_rotation(-rb.orientation)
+            robot.set_position((rb.x, rb.y, self.field.get_z() + robot.height/2))
+            robot.set_rotation(rb.orientation)
             robot.is_removed = False
 
         for removed_id in removed_ids:

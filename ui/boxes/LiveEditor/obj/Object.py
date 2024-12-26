@@ -52,13 +52,12 @@ class Object:
         self.scene.remove(self.grp)
         self.grp = None
 
-
     def set_position(self, pos):
         x, y, z = pos
         self.grp.local.position = [x, y, z]
 
     def set_rotation(self, dir):
-        rot = la.quat_from_euler((-dir), order="Z")
+        rot = la.quat_from_euler((dir), order="Z")
         self.grp.local.rotation = rot
 
     def get_x(self):

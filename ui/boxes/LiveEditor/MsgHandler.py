@@ -1,17 +1,15 @@
 from ui.boxes.LiveEditor.event_pb2 import EventMessage
-from tbkpy.socket.udp import UDPMultiCastReceiver, UDPSender
-from tbkpy.socket.plugins import ProtobufParser
+from ui.boxes.LiveEditor.tbkpy.udp import UDPMultiCastReceiver, UDPSender, UDPReceiver
+from ui.boxes.LiveEditor.tbkpy.plugins import ProtobufParser
 from tzcp.ssl.rocos.zss_vision_detection_pb2 import Vision_DetectionFrame
-from tzcp.ssl.rocos.zss_debug_pb2 import Debug_Heatmap, Debug_Msgs, Debug_Msg
-from tzcp.ssl.rocos.zss_geometry_pb2 import Point
 from ui.boxes.LiveEditor.logger.Logger import log
 import time
 
 
 class MsgHandler:
-    def __init__(self, data=None, SENDERIP='233.233.233.233', VISION_PORT=41001, **kwargs):
+    def __init__(self, data=None, SENDERIP="233.233.233.233", VISION_PORT=41001, **kwargs):
         self.data = data
-        self.refresh_time = kwargs.get("refresh_rate", 0.0333)
+        self.refresh_time = kwargs.get("refresh_rate", 0.00001)
         self.time = time.time()
 
         self.receiver_vision = UDPMultiCastReceiver(

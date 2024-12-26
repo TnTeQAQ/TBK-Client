@@ -4,6 +4,7 @@
 
 ```bash
 pip install -r requirements.txt
+pip install git+https://github.com/Turing-zero/tzcp
 ```
 
 ## 运行程序
