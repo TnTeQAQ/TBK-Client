@@ -1,0 +1,2 @@
+BLUE = 0
+YELLOW = 1

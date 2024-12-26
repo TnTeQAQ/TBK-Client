@@ -9,8 +9,11 @@ import time
 
 
 class MsgHandler:
-    def __init__(self, data=None, SENDERIP='233.233.233.233', VISION_PORT=41001):
+    def __init__(self, data=None, SENDERIP='233.233.233.233', VISION_PORT=41001, **kwargs):
         self.data = data
+        self.refresh_time = kwargs.get("refresh_rate", 0.0333)
+        self.time = time.time()
+
         self.receiver_vision = UDPMultiCastReceiver(
             SENDERIP,
             VISION_PORT,
@@ -24,18 +27,21 @@ class MsgHandler:
         )
 
     def callback_vision(self, recv):
-        if self.data["is_recording"]:
-            packge = recv[0]
-            time_now = time.time()
-            index_time = int(time_now * 1e9)
-            log.log(packge, index_time, 2)
-            packge = ProtobufParser(Vision_DetectionFrame).decode(packge)
-            self.data["stage_data"] = packge
-            # elapsed_time = time_now - self.start_time
-            # shareData.time.elapsed_time = elapsed_time
-            # shareData.ui.plot_timeshapes_x.append(elapsed_time)
-            # shareData.ui.plot_timeshapes_y.append(self.y_add)
-            # shareData.ui.detection_data_real_tiem = packge
+        if time.time() - self.time > self.refresh_time:
+            if self.data["is_recording"]:
+                packge = recv[0]
+                time_now = time.time()
+                index_time = int(time_now * 1e9)
+                log.log(packge, index_time, 2)
+                packge = ProtobufParser(Vision_DetectionFrame).decode(packge)
+                self.data["stage_data"] = packge
+                # elapsed_time = time_now - self.start_time
+                # shareData.time.elapsed_time = elapsed_time
+                # shareData.ui.plot_timeshapes_x.append(elapsed_time)
+                # shareData.ui.plot_timeshapes_y.append(self.y_add)
+                # shareData.ui.detection_data_real_tiem = packge
+            self.time = time.time()
+
 
     def callback_event(self, recv):
         event_info = recv[0]

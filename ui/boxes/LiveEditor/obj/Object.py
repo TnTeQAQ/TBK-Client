@@ -24,7 +24,6 @@ class Object:
     def add_position(self, pos, rate, threshold=None):
         if threshold is None:
             threshold = self.threshold_pos
-
         current_position = np.array(self.grp.local.position)
         pos = np.array(pos)
         # 计算当前位置与目标位置的差异
@@ -53,8 +52,6 @@ class Object:
         self.scene.remove(self.grp)
         self.grp = None
 
-    # def set_name(self, name):
-    #     self.grp_name.geometry.set_markdown(name[0] + name.split("_")[-1])
 
     def set_position(self, pos):
         x, y, z = pos
@@ -64,12 +61,11 @@ class Object:
         rot = la.quat_from_euler((-dir), order="Z")
         self.grp.local.rotation = rot
 
-    def set_color(self, **kwargs):
-        pass
-    #     self.grp_body.material.color = color
-    #     self.grp_eye.material.color = (
-    #         [1, 1, 1, 1] if color == [0.0, 0.0, 1.0, 1.0] else [0, 0, 0, 1]
-    #     )
-    #     self.grp_name.material.color = (
-    #         [1, 1, 1, 1] if color == [0.0, 0.0, 1.0, 1.0] else [0, 0, 0, 1]
-    #     )
+    def get_x(self):
+        return self.grp.local.position[0]
+
+    def get_y(self):
+        return self.grp.local.position[1]
+
+    def get_z(self):
+        return self.grp.local.position[2]

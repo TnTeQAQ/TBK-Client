@@ -1,8 +1,6 @@
 import pygfx as gfx
 from ui.boxes.LiveEditor.obj.Object import Object
-
-BLUE = 0
-YELLOW = 1
+from static.Params import *
 
 COLORS = {
     "BLUE_BODY_COLOR": (0, 0, 1, 1),
@@ -19,6 +17,9 @@ class Robot(Object):
     def __init__(self, **kwargs):
         self.name = kwargs.get("name", "ROBOT")
         self.team = kwargs.get("team", BLUE)
+        self.length = kwargs.get("length", 130)
+        self.width = kwargs.get("width", 130)
+        self.height = kwargs.get("height", 130)
         self.robot_name = None
         self.robot_eye = None
         self.robot_body = None
@@ -26,12 +27,12 @@ class Robot(Object):
 
     def create(self):
         self.robot_body = gfx.Mesh(
-            gfx.box_geometry(130, 130, 130),
+            gfx.box_geometry(self.width, self.length, self.height),
             gfx.MeshPhongMaterial(color=self.get_body_color(), flat_shading=True),
         )
 
         self.robot_eye = gfx.Mesh(
-            gfx.box_geometry(10, 120, 50),
+            gfx.box_geometry(self.width/13, self.length, self.height/3),
             gfx.MeshPhongMaterial(color=self.get_eye_color(), flat_shading=True),
         )
         self.robot_eye.local.position = [70, 0, 50]
